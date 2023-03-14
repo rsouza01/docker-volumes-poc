@@ -30,7 +30,7 @@ services:
       - db
     volumes:
       - asset-volume:/var/lib/assets
-
+      - shared-artifacts:/opt/shared-artifacts
   frontend:
     build: ./src/endgamefrontend
     ports:
@@ -43,3 +43,8 @@ services:
 volumes:
   asset-volume:
   dbvolume:
+  shared-artifacts:
+     driver_opts:
+           type: none
+           device: ${PWD}/src/shared-artifacts
+           o: bind
