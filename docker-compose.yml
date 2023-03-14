@@ -1,0 +1,45 @@
+version: '3'
+services:
+  # nginx:
+  #   volumes:
+  #     - asset-volume:/var/lib/assets
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: john
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: endgame
+    volumes:
+      - dbvolume:/var/lib/postgresql/data
+    
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 9090:8080
+
+  backend:
+    build: ./src/microservice/endgamebackend
+    environment:
+      DB_USER: john
+      DB_PASS: example
+      DB: endgame
+      DB_HOST: db
+    depends_on:
+      - db
+    volumes:
+      - asset-volume:/var/lib/assets
+
+  frontend:
+    build: ./src/microservice/endgamefrontend
+    ports:
+      - 80:5000
+    depends_on:
+      - backend
+    volumes:
+      - asset-volume:/var/lib/assets
+
+volumes:
+  asset-volume:
+  dbvolume:
